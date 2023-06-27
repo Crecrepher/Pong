@@ -1,5 +1,7 @@
 #pragma once
 #include "GameObject.h"
+
+
 class RectGo : public GameObject
 {
 public:
@@ -13,6 +15,8 @@ public:
 
 	virtual void SetOrigin(Origins origin);
 	virtual void SetOrigin(float x, float y);
+
+	virtual void SetSize(const sf::Vector2f& size);
 
 	virtual void Init()override;
 	virtual void Reset()override;

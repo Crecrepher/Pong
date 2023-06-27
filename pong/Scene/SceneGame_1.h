@@ -1,5 +1,6 @@
 #pragma once
 #include "Scene.h"
+#include "BlockGo.h"
 #include <sstream>
 class SceneGame : public Scene
 {
@@ -12,6 +13,8 @@ protected:
 	Direction playerDir;
 
 	bool pause;
+
+
 public:
 	SceneGame();
 	virtual ~SceneGame() override;

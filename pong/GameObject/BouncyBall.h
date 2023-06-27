@@ -7,6 +7,9 @@ private:
 
 	float speed = 500;
 	int lifelost = 0;
+
+	bool isDead = true;
+
 public:
 	float ballRadius;
 	sf::Vector2f direction;
@@ -30,5 +33,7 @@ public:
 
 	sf::Vector2f GetDir() const;
 	int LifeLost() const;
+
+	bool IsDead() const;
 };
 

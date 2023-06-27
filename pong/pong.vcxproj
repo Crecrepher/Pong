@@ -152,6 +152,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="GameObject\BlockGo.cpp" />
+    <ClCompile Include="GameObject\FloatRectGo.cpp" />
     <ClCompile Include="GameObject\BouncyBall.cpp" />
     <ClCompile Include="GameObject\CirGo.cpp" />
     <ClCompile Include="GameObject\EffectGo.cpp">
@@ -198,6 +200,8 @@
     <ClCompile Include="Universial\Variables.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="GameObject\BlockGo.h" />
+    <ClInclude Include="GameObject\FloatRectGo.h" />
     <ClInclude Include="GameObject\BouncyBall.h" />
     <ClInclude Include="GameObject\CirGo.h" />
     <ClInclude Include="GameObject\EffectGo.h" />

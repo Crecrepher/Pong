@@ -33,6 +33,11 @@ void RectGo::SetOrigin(float x, float y)
 	rectangle.setOrigin(x, y);
 }
 
+void RectGo::SetSize(const sf::Vector2f& size)
+{
+	rectangle.setSize(size);
+}
+
 void RectGo::Init()
 {
 

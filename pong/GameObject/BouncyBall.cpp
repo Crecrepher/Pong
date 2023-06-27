@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "BouncyBall.h"
 #include "Framework.h"
-
+#include "InputMgr.h"
 BouncyBall::BouncyBall(const std::string n) :CirGo(n), ballCurrentDir(Direction::None)
 {
 }
@@ -21,7 +21,7 @@ void BouncyBall::Init()
 		rnd--;
 		ballCurrentDir = Direction::Left;
 	}
-	direction = sf::Vector2f(rnd, 1.f);
+	direction = sf::Vector2f(rnd, -1.f);
 	SetPosition(FRAMEWORK.GetWindowSize().x * 0.5f,
 		FRAMEWORK.GetWindowSize().y * 0.4f);
 }
@@ -63,6 +63,7 @@ void BouncyBall::Update(float dt)
 	{
 		Init();
 		lifelost++;
+		isDead = true;
 	}
 
 	else if (direction.x > 0)
@@ -73,7 +74,15 @@ void BouncyBall::Update(float dt)
 	{
 		ballCurrentDir = Direction::Left;
 	}
-
+	if (INPUT_MGR.GetKeyDown(sf::Keyboard::Return) ||
+		INPUT_MGR.GetKeyDown(sf::Keyboard::Space))
+	{
+		if (isDead = true)
+		{
+			isDead = false;
+		}
+		
+	}
 }
 
 void BouncyBall::Draw(sf::RenderWindow& window)
@@ -137,5 +146,10 @@ sf::Vector2f BouncyBall::GetDir() const
 int BouncyBall::LifeLost() const
 {
 	return lifelost;
+}
+
+bool BouncyBall::IsDead() const
+{
+	return isDead;
 }
 
