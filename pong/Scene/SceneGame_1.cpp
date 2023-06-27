@@ -10,10 +10,12 @@
 #include "TextGo.h"
 
 
+
 SceneGame::SceneGame() : Scene(SceneId::Game1), score(0),live(3),
 playerWidth(100.f), playerThick(20.f), playerDir(Direction::None),
 playerSpd(1500.f),pause(true)
 {
+	resources.push_back(std::make_tuple(ResourceTypes::Texture, "graphics/player4.png"));
 
 }
 
@@ -25,19 +27,20 @@ void SceneGame::Init()
 {
 	Release();
 	AddGo(new TextGo("score"));
-	AddGo(new RectGo("Player"));
+	AddGo(new BlockGo("Player"));
 	AddGo(new BouncyBall("Ball"));
 	AddGo(new TextGo("Score"));
-	for (int i = 0; i < 3; i++)
+	for (int i = 0; i < 25; i++)
 	{
 		std::string str = "Block" + std::to_string(i);
 		AddGo(new BlockGo(str));
 	}
-
 	for (auto go : gameObjects)
 	{
 		go->Init();
 	}
+
+
 }
 
 void SceneGame::Release()
@@ -47,6 +50,8 @@ void SceneGame::Release()
 		//go->Release();
 		delete go;
 	}
+	
+
 }
 
 void SceneGame::Enter()
@@ -58,19 +63,20 @@ void SceneGame::Enter()
 	live = 3;
 	playerWidth = 100.f;
 	playerThick = 20.f;
-	
 
-	RectGo* findRect = (RectGo*)FindGo("Player");
+
+	BlockGo* findRect = (BlockGo*)FindGo("Player");
 	findRect->SetSize(sf::Vector2f(playerWidth, playerThick));
 	findRect->SetOrigin(Origins::MC);
 	findRect->SetPosition(FRAMEWORK.GetWindowSize().x * 0.5f, FRAMEWORK.GetWindowSize().y * 0.9f);
 	findRect->rectangle.setFillColor(sf::Color::White);
 	findRect->sortLayer = 2;
+	findRect->SetPlayer();
 
 	BouncyBall* ball= (BouncyBall*)FindGo("Ball");
 	ball->SetBallSize(10.f);
 	ball->circle.setFillColor(sf::Color::White);
-	findRect->sortLayer = 2;
+	ball->sortLayer = 2;
 	ball->Reset();
 
 	TextGo* findTGo = (TextGo*)FindGo("Score");
@@ -82,17 +88,24 @@ void SceneGame::Enter()
 	findTGo->text.setPosition(25.f,5.f);
 	findTGo->sortLayer = 1;
 
-	for (int i = 0; i < 3; i++)
+	for (int i = 0; i < 5; i++)
 	{
-		std::string str = "Block" + std::to_string(i);
-		BlockGo* findBGo = (BlockGo*)FindGo(str);
-		findBGo->SetSize(sf::Vector2f(playerWidth, playerThick));
-		findBGo->SetOrigin(Origins::MC);
-		findBGo->SetPosition(FRAMEWORK.GetWindowSize().x * 0.5f * i , FRAMEWORK.GetWindowSize().y * 0.5f);
-		findBGo->rectangle.setFillColor(sf::Color::White);
-		findBGo->sortLayer = 2;
+		for (int j = 0; j < 5; j++)
+		{
+			std::string str = "Block" + std::to_string((i*5)+j);
+			BlockGo* findBGo = (BlockGo*)FindGo(str);
+			findBGo->SetActive(true);
+			findBGo->SetBlockHp(1);
+			findBGo->SetSize(sf::Vector2f(playerWidth, playerThick));
+			findBGo->SetOrigin(Origins::MC);
+			findBGo->SetPosition(FRAMEWORK.GetWindowSize().x * 0.1 + (j * playerWidth)+150.f*j,
+				FRAMEWORK.GetWindowSize().y * 0.15f+ (i * playerThick) + 50.f*i);
+			findBGo->rectangle.setFillColor(sf::Color::White);
+			findBGo->sortLayer = 2;
+		}
 	}
-	
+
+
 }
 
 void SceneGame::Exit()
@@ -110,10 +123,16 @@ void SceneGame::Update(float dt)
 		SCENE_MGR.ChangeScene(SceneId::Title);
 	}
 
-	RectGo* findRect = (RectGo*)FindGo("Player");
+	BlockGo* findRect = (BlockGo*)FindGo("Player");
 	BouncyBall* ball = (BouncyBall*)FindGo("Ball");
 	TextGo* findTGo = (TextGo*)FindGo("Score");
 	pause = ball->IsDead();
+	for (int i = 0; i < 25; i++)
+	{
+		std::string str = "Block" + std::to_string(i);
+		BlockGo* findBGo = (BlockGo*)FindGo(str);
+		findBGo->CheckBlock(ball);
+	}
 
 	if (live - ball->LifeLost() <= 0)
 	{
@@ -164,7 +183,8 @@ void SceneGame::Update(float dt)
 				score++;
 				if (playerDir == ball->ballCurrentDir)
 				{
-					if (ball->ballCurrentDir == Direction::Left)
+					if (ball->ballCurrentDir == Direction::Left&&
+						ball->direction.y>= 0.2)
 					{
 						ball->direction.x = ball->direction.x - 0.3;
 						ball->direction.y = -2 - ball->direction.x;
@@ -175,7 +195,8 @@ void SceneGame::Update(float dt)
 						ball->direction.y = -2 + ball->direction.x;
 					}
 				}
-				else if (playerDir != ball->ballCurrentDir && playerDir != Direction::None)
+				else if (playerDir != ball->ballCurrentDir && 
+					playerDir != Direction::None)
 				{
 					if (ball->ballCurrentDir == Direction::Left)
 					{
@@ -188,22 +209,19 @@ void SceneGame::Update(float dt)
 						ball->direction.y = -2 + ball->direction.x;
 					}
 				}
-				ball->Yup();
+				
 			}
 		}
 	}
 
-	for (int i = 0; i < 3; i++)
-	{
-		std::string str = "Block" + std::to_string(i);
-		BlockGo* findBGo = (BlockGo*)FindGo(str);
-		findBGo->CheckBlock(ball);
-	}
+	findRect->CheckBlock(ball);
+
 
 }
 
 void SceneGame::Draw(sf::RenderWindow& window)
 {
 	Scene::Draw(window);
+
 }
 

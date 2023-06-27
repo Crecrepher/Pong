@@ -1,10 +1,11 @@
 #include "stdafx.h"
 #include "BlockGo.h"
 #include "BouncyBall.h"
-
+#include "ResourceMgr.h"
 BlockGo::BlockGo(const std::string n)
-	:RectGo(n), blockHP(1)
+	:RectGo(n), blockHP(1), isPlayer(false), itemDrop(false)
 {
+
 }
 
 BlockGo::~BlockGo()
@@ -14,8 +15,8 @@ BlockGo::~BlockGo()
 void BlockGo::SetPosition(float x, float y)
 {
 	RectGo::SetPosition(x, y);
-	blockUp.SetPosition(GetPosition().x, GetPosition().y-(rectangle.getSize().y/2)+0.5f);
-	blockDown.SetPosition(GetPosition().x, GetPosition().y + (rectangle.getSize().y / 2) - 0.5f);
+	blockUp.SetPosition(GetPosition().x, GetPosition().y-(rectangle.getSize().y/2)+2.f);
+	blockDown.SetPosition(GetPosition().x, GetPosition().y + (rectangle.getSize().y / 2) - 2.f);
 	blockLeft.SetPosition(GetPosition().x - (rectangle.getSize().x / 2) + 0.5f, GetPosition().y);
 	blockRight.SetPosition(GetPosition().x + (rectangle.getSize().x / 2) - 0.5f, GetPosition().y);
 }
@@ -23,20 +24,20 @@ void BlockGo::SetPosition(float x, float y)
 void BlockGo::SetPosition(const sf::Vector2f& p)
 {
 	RectGo::SetPosition(p);
-	blockUp.SetPosition(GetPosition().x, GetPosition().y - (rectangle.getSize().y / 2) + 0.5f);
-	blockDown.SetPosition(GetPosition().x, GetPosition().y + (rectangle.getSize().y / 2) - 0.5f);
-	blockLeft.SetPosition(GetPosition().x - (rectangle.getSize().x / 2) + 0.5f, GetPosition().y);
-	blockRight.SetPosition(GetPosition().x + (rectangle.getSize().x / 2) - 0.5f, GetPosition().y);
+	blockUp.SetPosition(GetPosition().x, GetPosition().y - (rectangle.getSize().y / 2) + 2.f);
+	blockDown.SetPosition(GetPosition().x, GetPosition().y + (rectangle.getSize().y / 2) - 2.f);
+	blockLeft.SetPosition(GetPosition().x - (rectangle.getSize().x / 2) + 2.f, GetPosition().y);
+	blockRight.SetPosition(GetPosition().x + (rectangle.getSize().x / 2) - 2.f, GetPosition().y);
 }
 
 
 void BlockGo::SetSize(const sf::Vector2f& size)
 {
 	RectGo::SetSize(size);
-	blockUp.SetSize(size.x,1.f);
-	blockDown.SetSize(size.x, 1.f);
-	blockLeft.SetSize(1.f, size.y);
-	blockRight.SetSize(1.f, size.y);
+	blockUp.SetSize(size.x,4.f);
+	blockDown.SetSize(size.x, 4.f);
+	blockLeft.SetSize(4.f, size.y);
+	blockRight.SetSize(4.f, size.y);
 }
 
 void BlockGo::Init()
@@ -57,19 +58,17 @@ void BlockGo::Release()
 void BlockGo::Update(float dt)
 {
 	RectGo::Update(dt);
+	if (blockHP <= 0 && GetActive())
+	{
+		SetActive(false);
+		itemDrop = true/*(Utils::RandomRange(0, 5)>0)*/;
+	}
+	ItemDrop();
 }
 
 void BlockGo::Draw(sf::RenderWindow& window)
 {
 	RectGo::Draw(window);
-	if (blockHP < 0)
-	{
-		SetActive(false);
-		blockUp.SetActive(false);
-		blockDown.SetActive(false);
-		blockLeft.SetActive(false);
-		blockRight.SetActive(false);
-	}
 }
 
 
@@ -101,29 +100,61 @@ bool BlockGo::BlockNBall(const sf::FloatRect& rect, BouncyBall* ball)
 
 void BlockGo::CheckBlock(BouncyBall* ball)
 {
-	if (BlockNBall(blockUp.frect,ball))
+	if (BlockNBall(blockUp.frect,ball) && GetActive())
 	{
 		ball->Yup();
-		blockHP--;
+		if (!isPlayer)
+		{
+			blockHP--;
+		}
 	}
-	else if (BlockNBall(blockDown.frect, ball))
+	if (BlockNBall(blockDown.frect, ball) && GetActive())
 	{
 		ball->Ydown();
-		blockHP--;
+		if (!isPlayer)
+		{
+			blockHP--;
+		}
 	}
-	else if (BlockNBall(blockLeft.frect, ball))
+	if (BlockNBall(blockLeft.frect, ball) && GetActive())
 	{
 		ball->Xleft();
-		blockHP--;
+		if (!isPlayer)
+		{
+			blockHP--;
+		}
 	}
-	else if (BlockNBall(blockRight.frect, ball))
+	if (BlockNBall(blockRight.frect, ball) && GetActive())
 	{
 		ball->Xright();
-		blockHP--;
+		if (!isPlayer)
+		{
+			blockHP--;
+		}
 	}
+}
+
+void BlockGo::SetPlayer()
+{
+	isPlayer = true;
 }
 
 bool BlockGo::isBreak()
 {
 	return blockHP==0;
+}
+
+void BlockGo::SetBlockHp(int hp)
+{
+	blockHP = hp;
+}
+
+bool BlockGo::ItemDrop()
+{
+	if (itemDrop)
+	{
+		itemDrop = false;
+
+	}
+	return itemDrop;
 }

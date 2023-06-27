@@ -1,18 +1,22 @@
 #pragma once
 #include "RectGo.h"
 #include "FloatRectGo.h"
+#include "RectGo.h"
 class BouncyBall;
 
 class BlockGo : public RectGo
 {
 private:
+	bool itemDrop;
+	bool isPlayer;
 	int blockHP;
+
 public:
 	FloatRectGo blockUp;
 	FloatRectGo blockDown;
 	FloatRectGo blockLeft;
 	FloatRectGo blockRight;
-
+	
 	BlockGo(const std::string n = "");
 	virtual ~BlockGo() override;
 
@@ -30,6 +34,9 @@ public:
 	bool BlockNBall(const sf::FloatRect& rect, BouncyBall* ball);
 	void CheckBlock(BouncyBall* ball);
 
+	void SetPlayer();
 	bool isBreak();
+	void SetBlockHp(int hp);
+	bool ItemDrop();
 };
 

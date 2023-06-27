@@ -14,8 +14,7 @@ void Framework::Init(int width, int height, const std::string& title)
 	window.create(sf::VideoMode(width, height), title);
     //ÀüÃ¼¾µ°Å ±×¸®±â
     RESOURCE_MGR.Load(ResourceTypes::Font, "fonts/DS-DIGI.ttf");
-
-
+    RESOURCE_MGR.Load(ResourceTypes::Texture, "graphics/player4.png");
     //ÆÀ¹ö²¨
     RESOURCE_MGR.Load(ResourceTypes::Font, "fonts/KOMIKAP_.ttf");
     RESOURCE_MGR.Load(ResourceTypes::Texture, "graphics/timber_icon.png");
@@ -30,6 +29,7 @@ void Framework::Init(int width, int height, const std::string& title)
 
 void Framework::Release()
 {
+    RESOURCE_MGR.UnLoad(ResourceTypes::Texture, "graphics/player4.png");
     RESOURCE_MGR.UnLoad(ResourceTypes::Font, "fonts/KOMIKAP_.ttf");
     RESOURCE_MGR.UnLoad(ResourceTypes::Texture, "graphics/title.png");
     RESOURCE_MGR.UnLoad(ResourceTypes::Texture, "graphics/timber_icon.png");

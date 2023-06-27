@@ -22,8 +22,8 @@ void BouncyBall::Init()
 		ballCurrentDir = Direction::Left;
 	}
 	direction = sf::Vector2f(rnd, -1.f);
-	SetPosition(FRAMEWORK.GetWindowSize().x * 0.5f,
-		FRAMEWORK.GetWindowSize().y * 0.4f);
+	//SetPosition(FRAMEWORK.GetWindowSize().x * 0.5f,
+	//	FRAMEWORK.GetWindowSize().y * 0.4f);
 }
 
 void BouncyBall::Reset()
