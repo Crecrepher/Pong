@@ -16,7 +16,7 @@ protected:
 	SceneId currentSceneId = SceneId::None;
 	Scene* currentScene = nullptr;
 
-	SceneId startSceneId = SceneId::Game1;
+	SceneId startSceneId = SceneId::Game2;
 
 	float timer = 0.f;
 	bool timeFlip;

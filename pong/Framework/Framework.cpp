@@ -29,6 +29,7 @@ void Framework::Init(int width, int height, const std::string& title)
 
 void Framework::Release()
 {
+    RESOURCE_MGR.UnLoad(ResourceTypes::Font, "fonts/DS-DIGI.ttf");
     RESOURCE_MGR.UnLoad(ResourceTypes::Texture, "graphics/player4.png");
     RESOURCE_MGR.UnLoad(ResourceTypes::Font, "fonts/KOMIKAP_.ttf");
     RESOURCE_MGR.UnLoad(ResourceTypes::Texture, "graphics/title.png");

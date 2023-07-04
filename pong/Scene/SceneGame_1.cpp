@@ -8,7 +8,7 @@
 
 #include "BouncyBall.h"
 #include "TextGo.h"
-
+#include "PongPlayerGo.h"
 
 
 SceneGame::SceneGame() : Scene(SceneId::Game1), score(0),live(3),
@@ -27,7 +27,7 @@ void SceneGame::Init()
 {
 	Release();
 	AddGo(new TextGo("score"));
-	AddGo(new BlockGo("Player"));
+	AddGo(new PongPlayerGo("Player"));
 	AddGo(new BouncyBall("Ball"));
 	AddGo(new TextGo("Score"));
 	for (int i = 0; i < 25; i++)
@@ -65,7 +65,7 @@ void SceneGame::Enter()
 	playerThick = 20.f;
 
 
-	BlockGo* findRect = (BlockGo*)FindGo("Player");
+	PongPlayerGo* findRect = (PongPlayerGo*)FindGo("Player");
 	findRect->SetSize(sf::Vector2f(playerWidth, playerThick));
 	findRect->SetOrigin(Origins::MC);
 	findRect->SetPosition(FRAMEWORK.GetWindowSize().x * 0.5f, FRAMEWORK.GetWindowSize().y * 0.9f);
@@ -116,14 +116,14 @@ void SceneGame::Exit()
 
 void SceneGame::Update(float dt)
 {
-	
+
 	playerDir = Direction::None;
 	if (INPUT_MGR.GetKeyDown(sf::Keyboard::Escape))
 	{
 		SCENE_MGR.ChangeScene(SceneId::Title);
 	}
 
-	BlockGo* findRect = (BlockGo*)FindGo("Player");
+	PongPlayerGo* findRect = (PongPlayerGo*)FindGo("Player");
 	BouncyBall* ball = (BouncyBall*)FindGo("Ball");
 	TextGo* findTGo = (TextGo*)FindGo("Score");
 	pause = ball->IsDead();
@@ -153,66 +153,67 @@ void SceneGame::Update(float dt)
 		playerDir = Direction::Right;
 	}
 
-	if (INPUT_MGR.GetKeyDown(sf::Keyboard::Return) || 
+	if (INPUT_MGR.GetKeyDown(sf::Keyboard::Return) ||
 		INPUT_MGR.GetKeyDown(sf::Keyboard::Space))
 	{
 		pause = false;
 	}
 	if (pause)
 	{
-		ball->SetPosition(findRect->GetPosition()+sf::Vector2f(0, -playerThick));
+		ball->SetPosition(findRect->GetPosition() + sf::Vector2f(0, -playerThick));
 		return;
 	}
+	/////////////////////////////////////////////////////////////////
 	Scene::Update(dt);
-	
-	
+
+
 	std::stringstream scoreText;
 	scoreText << "SCORE " << score <<
 		"\tLIFE " << live - ball->LifeLost();
 	findTGo->text.setString(scoreText.str());
 
-	if (ball->GetPosition().y >= findRect->GetPosition().y-playerThick
-		&& ball->GetPosition().y <= findRect->GetPosition().y + playerThick)
-	{
-		if (ball->GetPosition().x >= findRect->GetPosition().x - playerWidth/2
-			&& ball->GetPosition().x <= findRect->GetPosition().x + playerWidth/2)
-		{
-			
-			if (ball->GetDir().y>0)
-			{
-				score++;
-				if (playerDir == ball->ballCurrentDir)
-				{
-					if (ball->ballCurrentDir == Direction::Left&&
-						ball->direction.y>= 0.2)
-					{
-						ball->direction.x = ball->direction.x - 0.3;
-						ball->direction.y = -2 - ball->direction.x;
-					}
-					else if (ball->ballCurrentDir == Direction::Right)
-					{
-						ball->direction.x = ball->direction.x + 0.3;
-						ball->direction.y = -2 + ball->direction.x;
-					}
-				}
-				else if (playerDir != ball->ballCurrentDir && 
-					playerDir != Direction::None)
-				{
-					if (ball->ballCurrentDir == Direction::Left)
-					{
-						ball->direction.x = ball->direction.x + 0.3;
-						ball->direction.y = -2 - ball->direction.x;
-					}
-					else if (ball->ballCurrentDir == Direction::Right)
-					{
-						ball->direction.x = ball->direction.x - 0.3;
-						ball->direction.y = -2 + ball->direction.x;
-					}
-				}
-				
-			}
-		}
-	}
+	//if (ball->GetPosition().y >= findRect->GetPosition().y - playerThick
+	//	&& ball->GetPosition().y <= findRect->GetPosition().y + playerThick)
+	//{
+	//	if (ball->GetPosition().x >= findRect->GetPosition().x - playerWidth / 2
+	//		&& ball->GetPosition().x <= findRect->GetPosition().x + playerWidth / 2)
+	//	{
+
+	//		if (ball->GetDir().y > 0)
+	//		{
+	//			score++;
+	//			if (playerDir == ball->ballCurrentDir)
+	//			{
+	//				if (ball->ballCurrentDir == Direction::Left &&
+	//					ball->direction.y >= 0.2)
+	//				{
+	//					ball->direction.x = ball->direction.x - 0.3;
+	//					ball->direction.y = -2 - ball->direction.x;
+	//				}
+	//				else if (ball->ballCurrentDir == Direction::Right)
+	//				{
+	//					ball->direction.x = ball->direction.x + 0.3;
+	//					ball->direction.y = -2 + ball->direction.x;
+	//				}
+	//			}
+	//			else if (playerDir != ball->ballCurrentDir &&
+	//				playerDir != Direction::None)
+	//			{
+	//				if (ball->ballCurrentDir == Direction::Left)
+	//				{
+	//					ball->direction.x = ball->direction.x + 0.3;
+	//					ball->direction.y = -2 - ball->direction.x;
+	//				}
+	//				else if (ball->ballCurrentDir == Direction::Right)
+	//				{
+	//					ball->direction.x = ball->direction.x - 0.3;
+	//					ball->direction.y = -2 + ball->direction.x;
+	//				}
+	//			}
+
+	//		}
+	//	}
+	//}
 
 	findRect->CheckBlock(ball);
 

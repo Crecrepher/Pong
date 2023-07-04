@@ -1,63 +1,120 @@
 #include "stdafx.h"
-#include "SceneGame.h"
+#include "SceneGame_2.h"
 #include "SceneMgr.h"
 #include "InputMgr.h"
 #include "ResourceMgr.h"
 #include "GameObject.h"
+#include "Framework.h"
+#include <sstream>
 
-SceneGame::SceneGame() : Scene(SceneId::Game)
+#include "TextGo.h"
+
+SceneGame2::SceneGame2() : Scene(SceneId::Game2)
 {
 }
 
-SceneGame::~SceneGame()
+SceneGame2::~SceneGame2()
 {
 }
 
-void SceneGame::Init()
+void SceneGame2::Init()
 {
 	Release();
+	bat.Init();
+	ball.Init();
 
-	for (auto go : gameObjects)
-	{
-		go->Init();
-	}
+	hud.setFont(*RESOURCE_MGR.GetFont("fonts/DS-DIGI.ttf"));
+	hud.setCharacterSize(50);
+	hud.setFillColor(sf::Color::White);
+	hud.setPosition(20, 20);
 }
 
-void SceneGame::Release()
+void SceneGame2::Release()
 {
-	for (auto go : gameObjects)
-	{
-		//go->Release();
-		delete go;
-	}
 }
 
-void SceneGame::Enter()
+void SceneGame2::Enter()
 {
 	Scene::Enter();
-	RESOURCE_MGR.Load(ResourceTypes::Texture, "graphics/player4.png");
+	bat.Init();
 }
 
-void SceneGame::Exit()
+void SceneGame2::Exit()
 {
 	Scene::Exit();
-	RESOURCE_MGR.Unload(ResourceTypes::Texture, "graphics/player4.png");
 }
 
-void SceneGame::Update(float dt)
+void SceneGame2::Update(float dt)
 {
-	Scene::Update(dt);
-	if (INPUT_MGR.GetKeyDown(sf::Keyboard::Escape))
+	if (!ballActive && INPUT_MGR.GetKeyDown(sf::Keyboard::Space))
 	{
-		SCENE_MGR.ChangeScene(SceneId::Title);
+		ballActive = true;
+		ball.Fire(Utils::Normalize({1.f,-1.f}),1000.f);
 	}
+	Scene::Update(dt);
+	bat.Update(dt);
+
+
+	if (!ballActive)
+	{
+		ball.SetPos(bat.GetPos());
+	}
+	ball.Update(dt);
+
+	//충돌체크
+	const sf::FloatRect ballRect = ball.GetBounds();
+	if (ballRect.top < 0.f)
+	{
+		// 위
+		ball.OnCollisionTop();
+	}
+	else if (ballRect.top + ballRect.height >720.f)
+	{
+		//아래
+		ball.OnCollisionBottom();	
+		--life;
+
+		ballActive = false;
+		ball.Init();
+		if (life == 0)
+		{
+			bat.Init();
+			score = 0;
+			life = 3;
+		}
+	}
+	else if (ballRect.left < 0.f)
+	{
+		// 왼쪽
+		ball.OnCollisionLeft();
+	}
+	else if (ballRect.left + ballRect.width >1280.f)
+	{
+		// 오른쪽
+		ball.OnCollisionRight();
+	}
+
+	if (ballRect.intersects(bat.GetBounds())&& !playerBound && ball.GetDir().y>0)
+	{
+		ball.OnCollisionBottom();
+		score++;
+		playerBound = true;
+	}
+	else
+	{
+		playerBound = false;
+	}
+
+	std::stringstream ss;
+	ss << "Score: " << score << "\tLife: " << life;
+	hud.setString(ss.str());
 }
 
-void SceneGame::Draw(sf::RenderWindow& window)
+void SceneGame2::Draw(sf::RenderWindow& window)
 {
 	Scene::Draw(window);
-
-	sf::Sprite sprite;
-	sprite.setTexture(*RESOURCE_MGR.GetTexture("graphics/player4.png"));
-	window.draw(sprite);
+	bat.Draw(window);
+	ball.Draw(window);
+	window.draw(hud);
 }
+

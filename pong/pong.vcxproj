@@ -152,6 +152,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Ball.cpp" />
+    <ClCompile Include="Bat.cpp" />
     <ClCompile Include="GameObject\BlockGo.cpp" />
     <ClCompile Include="GameObject\FloatRectGo.cpp" />
     <ClCompile Include="GameObject\BouncyBall.cpp" />
@@ -165,17 +167,12 @@
     <ClCompile Include="GameObject\RectGo.cpp" />
     <ClCompile Include="GameObject\SoundGo.cpp" />
     <ClCompile Include="GameObject\TextGo.cpp" />
-    <ClCompile Include="Scene\SceneChar_1.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="Scene\SceneChar_2.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
-    </ClCompile>
+    <ClCompile Include="GameObject\PongPlayerGo.cpp" />
     <ClCompile Include="Scene\SceneGame_1.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="Scene\SceneGame_2.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="Scene\SceneMenu.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
@@ -200,6 +197,8 @@
     <ClCompile Include="Universial\Variables.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Ball.h" />
+    <ClInclude Include="Bat.h" />
     <ClInclude Include="GameObject\BlockGo.h" />
     <ClInclude Include="GameObject\FloatRectGo.h" />
     <ClInclude Include="GameObject\BouncyBall.h" />
@@ -209,17 +208,12 @@
     <ClInclude Include="GameObject\RectGo.h" />
     <ClInclude Include="GameObject\SoundGo.h" />
     <ClInclude Include="GameObject\TextGo.h" />
-    <ClInclude Include="Scene\SceneChar_1.h">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
-    </ClInclude>
-    <ClInclude Include="Scene\SceneChar_2.h">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
-    </ClInclude>
+    <ClInclude Include="GameObject\PongPlayerGo.h" />
     <ClInclude Include="Scene\SceneGame_1.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="Scene\SceneGame_2.h">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="Scene\SceneMenu.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
@@ -228,7 +222,9 @@
     <ClInclude Include="Framework\ResourceMgr.h" />
     <ClInclude Include="GameObject\GameObject.h" />
     <ClInclude Include="GameObject\SpriteGo.h" />
-    <ClInclude Include="Universial\Defines.h" />
+    <ClInclude Include="Universial\Defines.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="Framework\Framework.h" />
     <ClInclude Include="Framework\InputMgr.h" />
     <ClInclude Include="Scene\Scene.h" />

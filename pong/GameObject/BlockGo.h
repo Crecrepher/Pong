@@ -6,7 +6,7 @@ class BouncyBall;
 
 class BlockGo : public RectGo
 {
-private:
+protected:
 	bool itemDrop;
 	bool isPlayer;
 	int blockHP;
